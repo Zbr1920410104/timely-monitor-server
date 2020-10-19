@@ -1,0 +1,27 @@
+{
+  "todo-tree.highlights.defaultHighlight": {
+    "foreground": "white",
+    "icon": "pin",
+    "type": "tag"
+  },
+  "todo-tree.highlights.customHighlight": {
+    "TODO": {
+      "icon": "issue-opened",
+      "background": "#789CCE",
+      "rulerColour": "#789CCE",
+      "iconColour": "#789CCE"
+    },
+    "FIXME": {
+      "background": "#FC9F66",
+      "icon": "squirrel",
+      "rulerColour": "#FC9F66",
+      "iconColour": "#FC9F66"
+    },
+    "BUG": {
+      "background": "#F56E4A",
+      "icon": "bug",
+      "rulerColour": "#F56E4A",
+      "iconColour": "#F56E4A"
+    }
+  }
+}
