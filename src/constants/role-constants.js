@@ -6,8 +6,8 @@ export const AUTHORITY = {
     router: '/admin',
   },
   REVIEW_MANAGER: {
-    name: '普通节点',
+    name: '监测员',
     code: 5,
-    router: '/commonPoint',
+    router: '/monitor',
   },
 };

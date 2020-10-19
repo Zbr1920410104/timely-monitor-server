@@ -27,13 +27,7 @@ export default async (ctx, next) => {
 
     if (ctx.state.user.role === findRole(roleRouter)) {
       await next();
-    } else if (
-      roleRouter === 'block' ||
-      roleRouter === 'chain' ||
-      roleRouter === 'transaction' ||
-      roleRouter === 'user'
-    ) {
-      // file不控制权限获取
+    } else if (roleRouter === 'user') {
       await next();
     } else {
       ctx.throw(RESPONSE_CODE.unauthorized);

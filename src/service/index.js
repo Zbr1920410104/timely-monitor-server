@@ -1,11 +1,9 @@
-import blockService from './block/index';
-import chainService from './chain/index';
-import transactionService from './transaction/index';
+import monitorService from './monitor/index';
+import adminService from './admin/index';
 import userService from './user/index';
 
 export default {
-  ...blockService,
-  ...chainService,
-  ...transactionService,
+  ...monitorService,
   ...userService,
+  ...adminService,
 };

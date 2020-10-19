@@ -8,9 +8,8 @@ import logger from 'koa-logger';
 import cors from 'koa2-cors';
 
 // 路由
-import blocks from './src/routes/block/index';
-import chains from './src/routes/chain/index';
-import transactions from './src/routes/transaction/index';
+import monitors from './src/routes/monitor/index';
+import admins from './src/routes/admin/index';
 import users from './src/routes/user/index';
 
 // 中间件
@@ -53,9 +52,8 @@ app.use(async (ctx, next) => {
 });
 
 // routes
-app.use(blocks.routes(), blocks.allowedMethods());
-app.use(chains.routes(), chains.allowedMethods());
-app.use(transactions.routes(), transactions.allowedMethods());
+app.use(monitors.routes(), monitors.allowedMethods());
+app.use(admins.routes(), admins.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
 
 // error-handling

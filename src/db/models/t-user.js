@@ -11,7 +11,4 @@ export default db.define('t_user', {
   role: Sequelize.BIGINT(3), // 权限
   userName: Sequelize.STRING(32), // 用户名
   password: Sequelize.STRING(32),
-  privateKey: Sequelize.TEXT,
-  publicKey: Sequelize.TEXT,
-  amount: Sequelize.DECIMAL(16, 8),
 });

@@ -13,7 +13,7 @@ const SQL_CONFIG = {
     host: 'localhost',
     user: DEV_DATA_BASE_USER,
     password: DEV_DATA_BASE_KEY,
-    database: 'softwareTest3',
+    database: 'softwareTest4',
     port: 3306,
     connectionLimit: 10
   },
@@ -22,7 +22,7 @@ const SQL_CONFIG = {
     host: 'localhost',
     user: 'root',
     password: DEV_DATA_BASE_KEY,
-    database: 'softwareTest3',
+    database: 'softwareTest4',
     port: 3306,
     connectionLimit: 10
   },
@@ -31,7 +31,7 @@ const SQL_CONFIG = {
     host: 'localhost',
     user: PRO_DATA_BASE_USER,
     password: PRO_DATA_BASE_KEY,
-    database: 'softwareTest3',
+    database: 'softwareTest4',
     port: 3306,
     connectionLimit: 10
   }

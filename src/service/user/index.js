@@ -26,15 +26,7 @@ export default {
 
       userInfo = await user.findOne({
         where: { uuid },
-        attributes: [
-          'uuid',
-          'userName',
-          'password',
-          'role',
-          'publicKey',
-          'privateKey',
-          'amount',
-        ],
+        attributes: ['uuid', 'userName', 'password', 'role'],
         raw: true,
       });
 
@@ -54,42 +46,17 @@ export default {
     try {
       const userInfo = await user.findOne({
         where: {
-          [or]: [
-            {
-              userName,
-            },
-            {
-              publicKey: {
-                [Op.like]: `%${userName}%`,
-              },
-            },
-          ],
+          userName,
         },
-        attributes: [
-          'uuid',
-          'userName',
-          'password',
-          'publicKey',
-          'privateKey',
-          'amount',
-          'role',
-        ],
+        attributes: ['uuid', 'userName', 'password', 'role'],
         raw: true,
       });
 
-      if (
-        !userInfo ||
-        (userName !== userInfo.userName &&
-          userName !== userInfo?.publicKey.slice(0, 20))
-      ) {
+      if (!userInfo || userName !== userInfo.userName) {
         throw new CustomError('账号或密码错误');
       }
 
-      if (
-        !userInfo ||
-        (userInfo.password !== password &&
-          password !== userInfo?.privateKey?.slice(0, 20))
-      ) {
+      if (!userInfo || userInfo.password !== password) {
         throw new CustomError('账号或密码错误');
       }
 
@@ -129,8 +96,7 @@ export default {
    */
   queryUsers: () =>
     user.findAll({
-      attributes: ['role', 'uuid', 'privateKey', 'publicKey'],
+      attributes: ['uuid', 'role', 'userName'],
       raw: true,
-      where: { role: 5 },
     }),
 };
