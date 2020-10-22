@@ -53,4 +53,44 @@ router.get('/selectAccount', async (ctx, next) => {
   }
 });
 
+/**
+ * 更新账户
+ */
+router.post('/updateAccount', async (ctx, next) => {
+  try {
+    let { role, modifyUserName, uuid } = ctx.state.param;
+
+    const data = await service.updateAccount({
+      role,
+      userName: modifyUserName,
+      uuid,
+    });
+
+    ctx.body = new Res({
+      status: RESPONSE_CODE.success,
+      data,
+    });
+  } catch (error) {
+    throw error;
+  }
+});
+
+/**
+ * 删除账户
+ */
+router.post('/deleteAccount', async (ctx, next) => {
+  try {
+    let { uuid } = ctx.state.param;
+
+    const data = await service.deleteAccount(uuid);
+
+    ctx.body = new Res({
+      status: RESPONSE_CODE.success,
+      data,
+    });
+  } catch (error) {
+    throw error;
+  }
+});
+
 export default router;

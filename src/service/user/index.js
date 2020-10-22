@@ -98,5 +98,6 @@ export default {
     user.findAll({
       attributes: ['uuid', 'role', 'userName'],
       raw: true,
+      order: [['createdAt', 'ASC']],
     }),
 };

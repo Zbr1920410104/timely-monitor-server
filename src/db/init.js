@@ -14,7 +14,8 @@ require('@babel/register')({
 
 const uuid = require('uuid');
 const md5 = require('md5');
-// const account = require('./models/t-account').default;
+const tblacklist = require('./models/t-black-list').default;
+require('./models/t-picture').default;
 const user = require('./models/t-user').default;
 const sequelize = require('./db-connect');
 
@@ -33,10 +34,15 @@ Promise.all([
         role: 1,
       }),
       user.create({
-        uuid: uuid.v4(),
+        uuid: 'iamamonitor',
         userName: 'monitor1',
         password: md5('123456'),
         role: 5,
+      }),
+      tblacklist.create({
+        uuid: uuid.v4(),
+        monitorUuid: 'iamamonitor',
+        blackList: '因为;所以;但是;然而;否则',
       }),
     ]);
   })

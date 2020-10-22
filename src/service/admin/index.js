@@ -30,4 +30,19 @@ export default {
       attributes: ['uuid', 'userName', 'password', 'role'],
       raw: true,
     }),
+  /**
+   * 更新账户
+   */
+  updateAccount: ({ role, userName, uuid }) =>
+    user.update(
+      {
+        role,
+        userName,
+      },
+      { where: { uuid }, raw: true }
+    ),
+  /**
+   * 删除账户
+   */
+  deleteAccount: (uuid) => user.destroy({ where: { uuid }, raw: true }),
 };

@@ -10,6 +10,7 @@
   "dependencies": {
     "@koa/multer": "^2.0.2",
     "ali-oss": "^6.4.0",
+    "baidu-aip-sdk": "^2.4.6",
     "crypto-js": "^3.1.9-1",
     "debug": "^4.1.1",
     "docxtemplater": "^3.16.8",
@@ -32,6 +33,7 @@
     "node-xlsx": "^0.15.0",
     "pizzip": "^3.0.6",
     "sequelize": "^5.21.2",
+    "sharp": "^0.26.2",
     "sm-crypto": "^0.2.1",
     "uuid": "^3.3.3"
   },
