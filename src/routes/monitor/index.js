@@ -56,7 +56,69 @@ router.post('/saveBlackList', async (ctx, next) => {
  */
 router.post('/ocrTest', async (ctx, next) => {
   try {
-    const data = await service.ocrTest();
+    let { uuid } = ctx.state.user;
+
+    const data = await service.ocrTest(uuid);
+
+    ctx.body = new Res({
+      status: RESPONSE_CODE.success,
+      data,
+    });
+  } catch (error) {
+    throw error;
+  }
+});
+
+/**
+ * 查看黑名单
+ */
+router.get('/getMonitorList', async (ctx, next) => {
+  try {
+    let { uuid } = ctx.state.user;
+
+    const data = await service.getMonitorList(uuid);
+
+    ctx.body = new Res({
+      status: RESPONSE_CODE.success,
+      data,
+    });
+  } catch (error) {
+    throw error;
+  }
+});
+
+/**
+ * 查看黑名单
+ */
+router.get('/getPicture', async (ctx, next) => {
+  try {
+    let { uuid } = ctx.state.user;
+    let { isOpened, foreTime, laterTime } = ctx.state.param;
+
+    const data = await service.getPicture({
+      isOpened,
+      uuid,
+      foreTime,
+      laterTime,
+    });
+
+    ctx.body = new Res({
+      status: RESPONSE_CODE.success,
+      data,
+    });
+  } catch (error) {
+    throw error;
+  }
+});
+
+/**
+ * 获取图片
+ */
+router.get('/getFileUrl', async (ctx, next) => {
+  try {
+    let { url } = ctx.state.param;
+
+    const data = await service.getFileUrl(url);
 
     ctx.body = new Res({
       status: RESPONSE_CODE.success,
