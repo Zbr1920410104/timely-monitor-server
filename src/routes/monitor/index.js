@@ -58,7 +58,9 @@ router.post('/ocrTest', async (ctx, next) => {
   try {
     let { uuid } = ctx.state.user;
 
-    const data = await service.ocrTest(uuid);
+    let { monitorNumber } = ctx.state.param;
+
+    const data = await service.ocrTest({ monitorUuid: uuid, monitorNumber });
 
     ctx.body = new Res({
       status: RESPONSE_CODE.success,

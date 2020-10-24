@@ -42,7 +42,7 @@ Promise.all([
       tblacklist.create({
         uuid: uuid.v4(),
         monitorUuid: 'iamamonitor',
-        blackList: '因为;所以;但是;然而;否则',
+        blackList: '不存在;欢迎;开发;介绍;合理;原图;密码;java',
       }),
     ]);
   })

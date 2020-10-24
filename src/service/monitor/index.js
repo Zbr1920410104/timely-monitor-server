@@ -18,7 +18,7 @@ import client from '../../util/oss';
 import { db } from '../../db/db-connect';
 
 // OCR
-import aipOcrClient1 from '../../util/ocr';
+import aipOcrClient2 from '../../util/ocr';
 
 // mysql
 import Sequelize from 'sequelize';
@@ -46,10 +46,41 @@ export default {
       { where: { monitorUuid: uuid }, raw: true }
     ),
 
+  ocrTest1: async ({ monitorUuid, monitorNumber }) => {
+    await tblackList.findOne({
+      where: { monitorUuid },
+      attributes: ['blackList'],
+      raw: true,
+    });
+
+    let num = 0,
+      t;
+    const screenshots = async () => {
+      num++;
+      if (num % (monitorNumber + 1) === 0) {
+        return;
+      }
+      console.log(1);
+      clearTimeout(t);
+
+      t = setTimeout(async () => {
+        await tblackList.findOne({
+          where: { monitorUuid },
+          attributes: ['blackList'],
+          raw: true,
+        });
+        console.log(2);
+
+        screenshots();
+      }, 2000);
+    };
+    return screenshots();
+  },
+
   /**
    * 测试OCR
    */
-  ocrTest: async (monitorUuid) => {
+  ocrTest: async ({ monitorUuid, monitorNumber }) => {
     const monitor = await tblackList.findOne({
       where: { monitorUuid },
       attributes: ['blackList'],
@@ -59,37 +90,57 @@ export default {
     const args = monitor.blackList.replace(/;/g, '|');
 
     let num = 0,
-      t;
+      t,
+      pictureUuid;
     const screenshots = () => {
-      clearTimeout(t);
       num++;
-      if (num % 2 === 0) {
+      if (num % (monitorNumber + 1) === 0) {
         return;
       }
+      clearTimeout(t);
 
       t = setTimeout(async () => {
+        pictureUuid = uuid.v1();
+
         await screenshot({
           format: 'png',
-          filename: path.resolve(__dirname, `../../tests/test.png`),
-        })
-          .then((img) => {
-            console.log(`Screenshot${num} succeeded!`);
-          })
-          .catch((err) => {
-            console.log(`Screenshot${num} failed!`);
-          });
+          filename: path.resolve(__dirname, `../../tests/${pictureUuid}.png`),
+        });
 
-        const image = await fs.readFileSync(
-          path.resolve(__dirname, '../../tests/test.png')
+        // newImgBuffer = await sharp(
+        //   path.resolve(__dirname, `../../tests/test${num}.png`)
+        // )
+        //   .composite(
+        //     [
+        //       {
+        //         input: path.resolve(__dirname, '../../tests/warning.png'),
+        //         top: 12,
+        //         left: 20,
+        //       },
+        //     ]
+        //     // pictureList.map((dot) => {
+        //     //   return {
+        //     //     input: path.resolve(__dirname, '../../tests/warning.png'),
+        //     //     top: dot.top,
+        //     //     left: dot.left - 30 > 0 ? dot.left - 30 : 0,
+        //     //   };
+        //     // })
+        //   )
+        //   .toBuffer();
+
+        // console.log(newImgBuffer);
+        console.log(`Screenshot${num} succeeded!`);
+        let image = fs.readFileSync(
+          path.resolve(__dirname, `../../tests/${pictureUuid}.png`)
         );
-
-        const fileUuid = uuid.v1(),
+        console.log(image);
+        let fileUuid = uuid.v1(),
           fileUrl = `temp/oldPng/${fileUuid}.png`;
 
         // 上传文件
         await client.put(fileUrl, image);
 
-        const imageStr = image.toString('base64');
+        let imageStr = image.toString('base64');
 
         // 可选参数
         let options = {},
@@ -102,7 +153,7 @@ export default {
         options['probability'] = 'true';
 
         // 带参数调用通用文字识别（含位置信息版）, 图片参数为本地图片
-        await aipOcrClient1
+        await aipOcrClient2
           .accurate(imageStr, options)
           .then((result) => {
             res = result;
@@ -112,27 +163,28 @@ export default {
             console.log(err);
           });
 
-        const wordsList = res.words_result;
+        let wordsList = res?.words_result;
         let pictureList = [];
 
-        for (let i = 0; i < wordsList.length; i++) {
-          const str = wordsList[i].words;
-          const str1 = str.replace(/\s*/g, '');
+        if (wordsList?.length) {
+          for (let i = 0; i < wordsList.length; i++) {
+            let str = wordsList[i].words;
+            let str1 = str.replace(/\s*/g, '');
+            let array = [...str1.matchAll(args)];
+            let newArray = array.map((item) => {
+              return item.index;
+            });
 
-          const array = [...str1.matchAll(args)];
-
-          const newArray = array.map((item) => {
-            return item.index;
-          });
-
-          for (let j = 0; j < newArray.length; j++) {
-            // console.log(wordsList[i].chars[newArray[j]]);
-            pictureList.push(wordsList[i].chars[newArray[j]].location);
+            if (newArray.length) {
+              for (let j = 0; j < newArray.length; j++) {
+                pictureList.push(wordsList[i].chars[newArray[j]].location);
+              }
+            }
           }
         }
 
-        const newImg = await sharp(
-          path.resolve(__dirname, '../../tests/test.png')
+        let newImg = sharp(
+          path.resolve(__dirname, `../../tests/${pictureUuid}.png`)
         ).composite(
           pictureList.map((dot) => {
             return {
@@ -145,7 +197,7 @@ export default {
 
         let newImgBuffer = await newImg.toBuffer();
 
-        const newFileUuid = uuid.v1(),
+        let newFileUuid = uuid.v1(),
           newUrl = `temp/newPng/${newFileUuid}.png`;
 
         // 上传文件
@@ -160,8 +212,12 @@ export default {
           isViolate: pictureList.length ? 1 : 0,
         });
 
+        fs.unlinkSync(
+          path.resolve(__dirname, `../../tests/${pictureUuid}.png`)
+        );
+
         screenshots();
-      }, 5000);
+      }, 3000);
     };
 
     return screenshots();
