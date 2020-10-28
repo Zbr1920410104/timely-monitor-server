@@ -38,13 +38,30 @@ export default {
   /**
    * 更新黑名单
    */
-  updateBlackList: ({ uuid, blackList }) =>
-    tblackList.update(
-      {
-        blackList,
-      },
-      { where: { monitorUuid: uuid }, raw: true }
-    ),
+  updateBlackList: async ({ monitorUuid, blackList }) => {
+    const res = await tblackList.findOne({
+      where: { monitorUuid },
+      raw: true,
+    });
+
+    if (res) {
+      await tblackList.update(
+        {
+          blackList,
+        },
+        { where: { monitorUuid }, raw: true }
+      );
+    } else {
+      await tblackList.create(
+        {
+          blackList,
+          monitorUuid,
+          uuid: uuid.v1(),
+        },
+        { raw: true }
+      );
+    }
+  },
 
   ocrTest1: async ({ monitorUuid, monitorNumber }) => {
     await tblackList.findOne({

@@ -40,7 +40,10 @@ router.post('/saveBlackList', async (ctx, next) => {
     let { uuid } = ctx.state.user;
     let { blackList } = ctx.state.param;
 
-    const data = await service.updateBlackList({ uuid, blackList });
+    const data = await service.updateBlackList({
+      monitorUuid: uuid,
+      blackList,
+    });
 
     ctx.body = new Res({
       status: RESPONSE_CODE.success,
