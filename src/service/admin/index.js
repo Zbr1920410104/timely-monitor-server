@@ -28,6 +28,7 @@ export default {
     user.findOne({
       where: { uuid },
       attributes: ['uuid', 'userName', 'password', 'role'],
+      where: { role: [1, 5] },
       raw: true,
     }),
   /**

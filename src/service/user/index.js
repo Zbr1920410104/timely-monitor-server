@@ -48,7 +48,7 @@ export default {
         where: {
           userName,
         },
-        attributes: ['uuid', 'userName', 'password', 'role'],
+        attributes: ['uuid', 'userName', 'password', 'role', 'monitorUuid'],
         raw: true,
       });
 

@@ -9,6 +9,8 @@ export default db.define('t_picture', {
     unique: true,
   },
   monitorUuid: Sequelize.STRING(36),
+  consumerUuid: Sequelize.STRING(36),
+  consumerName: Sequelize.STRING(36),
   time: Sequelize.TEXT,
   originUrl: Sequelize.TEXT,
   newUrl: Sequelize.TEXT,

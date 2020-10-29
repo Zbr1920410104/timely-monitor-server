@@ -11,6 +11,7 @@ import cors from 'koa2-cors';
 import monitors from './src/routes/monitor/index';
 import admins from './src/routes/admin/index';
 import users from './src/routes/user/index';
+import consumers from './src/routes/consumer/index';
 
 // 中间件
 import verifyToken from './src/middle/verify-token';
@@ -55,6 +56,7 @@ app.use(async (ctx, next) => {
 app.use(monitors.routes(), monitors.allowedMethods());
 app.use(admins.routes(), admins.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
+app.use(consumers.routes(), consumers.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

@@ -1,5 +1,6 @@
 import tblackList from '../../db/models/t-black-list';
 import tpicture from '../../db/models/t-picture';
+import user from '../../db/models/t-user';
 
 // 工具类
 import CustomError from '../../util/custom-error';
@@ -63,41 +64,30 @@ export default {
     }
   },
 
-  ocrTest1: async ({ monitorUuid, monitorNumber }) => {
-    await tblackList.findOne({
-      where: { monitorUuid },
+  ocrTest2: async (uuid) => {
+    let res = await user.findOne({
+      where: { uuid },
+      attributes: ['monitorUuid'],
+      raw: true,
+    });
+
+    console.log(res.monitorUuid);
+
+    let blackList = await tblackList.findOne({
+      where: { monitorUuid: res.monitorUuid },
       attributes: ['blackList'],
       raw: true,
     });
 
-    let num = 0,
-      t;
-    const screenshots = async () => {
-      num++;
-      if (num % (monitorNumber + 1) === 0) {
-        return;
-      }
-      console.log(1);
-      clearTimeout(t);
+    console.log(blackList.blackList);
 
-      t = setTimeout(async () => {
-        await tblackList.findOne({
-          where: { monitorUuid },
-          attributes: ['blackList'],
-          raw: true,
-        });
-        console.log(2);
-
-        screenshots();
-      }, 2000);
-    };
-    return screenshots();
+    return;
   },
 
   /**
    * 测试OCR
    */
-  ocrTest: async ({ monitorUuid, monitorNumber }) => {
+  ocrTest3: async ({ monitorUuid, monitorNumber }) => {
     const monitor = await tblackList.findOne({
       where: { monitorUuid },
       attributes: ['blackList'],
@@ -246,7 +236,14 @@ export default {
   getMonitorList: (uuid) =>
     tpicture.findAll({
       where: { monitorUuid: uuid },
-      attributes: ['uuid', 'time', 'originUrl', 'newUrl', 'isViolate'],
+      attributes: [
+        'uuid',
+        'time',
+        'originUrl',
+        'newUrl',
+        'isViolate',
+        'consumerName',
+      ],
       order: [['time', 'DESC']],
       raw: true,
     }),
@@ -263,7 +260,7 @@ export default {
     if (isOpened === 'true') {
       return await tpicture.findAll({
         where: { monitorUuid: uuid },
-        attributes: ['uuid', 'time', 'newUrl'],
+        attributes: ['uuid', 'time', 'newUrl', 'consumerName'],
         order: [['time', 'DESC']],
         limit: 10,
         raw: true,
@@ -274,11 +271,59 @@ export default {
           monitorUuid: uuid,
           [and]: [{ time: { [gt]: foreTime } }, { time: { [lt]: laterTime } }],
         },
-        attributes: ['uuid', 'time', 'newUrl'],
+        attributes: ['uuid', 'time', 'newUrl', 'consumerName'],
         order: [['time', 'DESC']],
         limit: 10,
         raw: true,
       });
     }
   },
+
+  /**
+   * 新建账户
+   */
+  createConsumer: ({ monitorUuid, role, addUserName }) =>
+    user.create({
+      uuid: uuid.v4(),
+      userName: addUserName,
+      password: md5('123456'),
+      monitorUuid,
+      role: role,
+    }),
+  /**
+   * 根据uuid查询用户
+   */
+  selectConsumerByUuid: (uuid) =>
+    user.findOne({
+      where: { uuid },
+      attributes: ['uuid', 'userName', 'password', 'role'],
+      where: { role: 10 },
+      raw: true,
+    }),
+  /**
+   * 更新账户
+   */
+  updateConsumer: ({ role, userName, uuid }) =>
+    user.update(
+      {
+        role,
+        userName,
+      },
+      { where: { uuid }, raw: true }
+    ),
+  /**
+   * 删除账户
+   */
+  deleteConsumer: (uuid) => user.destroy({ where: { uuid }, raw: true }),
+
+  /**
+   * 查询所有账户信息
+   */
+  quaryConsumers: (uuid) =>
+    user.findAll({
+      attributes: ['uuid', 'userName', 'role'],
+      raw: true,
+      where: { role: 10, monitorUuid: uuid },
+      order: [['createdAt', 'ASC']],
+    }),
 };

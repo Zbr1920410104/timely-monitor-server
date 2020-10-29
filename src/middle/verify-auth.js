@@ -1,5 +1,5 @@
 import { AUTHORITY } from '../constants/role-constants';
-import Res from '../util/response';
+// import Res from '../util/response';
 import { RESPONSE_CODE } from '../constants/domain-constants';
 import verifyUnlessPath from '../util/verify-unless-path';
 

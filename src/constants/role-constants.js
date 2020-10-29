@@ -10,4 +10,9 @@ export const AUTHORITY = {
     code: 5,
     router: '/monitor',
   },
+  CONSUMER: {
+    name: '普通用户',
+    code: 10,
+    router: '/consumer',
+  },
 };

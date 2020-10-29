@@ -39,6 +39,13 @@ Promise.all([
         password: md5('123456'),
         role: 5,
       }),
+      user.create({
+        uuid: 'iamaconsumer',
+        userName: 'consumer1',
+        monitorUuid: 'iamamonitor',
+        password: md5('123456'),
+        role: 10,
+      }),
       tblacklist.create({
         uuid: uuid.v4(),
         monitorUuid: 'iamamonitor',
