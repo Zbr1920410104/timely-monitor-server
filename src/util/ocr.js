@@ -35,4 +35,4 @@ const aipOcrClient4 = new AipOcrClient(
   OCR_SECRET_KEY_FOUR
 );
 
-export default aipOcrClient2;
+export default aipOcrClient1;

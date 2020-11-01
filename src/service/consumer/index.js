@@ -18,7 +18,7 @@ import client from '../../util/oss';
 import { db } from '../../db/db-connect';
 
 // OCR
-import aipOcrClient2 from '../../util/ocr';
+import aipOcrClient1 from '../../util/ocr';
 
 // mysql
 import Sequelize from 'sequelize';
@@ -40,7 +40,7 @@ export default {
 
     console.log(blackListRes.blackList);
 
-    return;
+    return blackListRes.blackList;
   },
 
   /**
@@ -103,7 +103,7 @@ export default {
     options['probability'] = 'true';
 
     // 带参数调用通用文字识别（含位置信息版）, 图片参数为本地图片
-    await aipOcrClient2
+    await aipOcrClient1
       .accurate(imageStr, options)
       .then((result) => {
         res = result;
