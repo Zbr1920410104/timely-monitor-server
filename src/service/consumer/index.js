@@ -76,19 +76,19 @@ export default {
 
     await screenshot({
       format: 'png',
-      filename: path.resolve(__dirname, `../../tests/${pictureUuid}.png`),
+      filename: path.resolve(__dirname, `../../../../timely-monitor-com/public/tests/${pictureUuid}.png`),
     });
 
     console.log(`Screenshot succeeded!`);
     let image = fs.readFileSync(
-      path.resolve(__dirname, `../../tests/${pictureUuid}.png`)
+      path.resolve(__dirname, `../../../../timely-monitor-com/public/tests/${pictureUuid}.png`)
     );
 
-    let fileUuid = uuid.v1(),
-      fileUrl = `temp/oldPng/${fileUuid}.png`;
+    let fileUuid = uuid.v1();
+    // fileUrl = `temp/oldPng/${fileUuid}.png`;
 
-    // 上传文件
-    await client.put(fileUrl, image);
+    //  上传文件
+    // await client.put(fileUrl, image);
 
     let imageStr = image.toString('base64');
 
@@ -133,29 +133,33 @@ export default {
       }
     }
 
-    let newImg = sharp(
-      path.resolve(__dirname, `../../tests/${pictureUuid}.png`)
+    let newFileUuid = uuid.v1();
+
+    sharp(
+      path.resolve(__dirname, `../../../../timely-monitor-com/public/tests/${pictureUuid}.png`)
     ).composite(
       pictureList.map((dot) => {
         return {
-          input: path.resolve(__dirname, '../../tests/warning.png'),
+          input: path.resolve(__dirname, '../../../../timely-monitor-com/public/tests/warning.png'),
           top: dot.top,
           left: dot.left - 30 > 0 ? dot.left - 30 : 0,
         };
       })
-    );
+    ).toFile(path.resolve(__dirname, `../../../../timely-monitor-com/public/images/${newFileUuid}.png`), (err, info) => {
+      console.log(err)
+    });
 
     if (pictureList.length) {
       msg = '出现违规内容!';
     }
 
-    let newImgBuffer = await newImg.toBuffer();
+    // let newImgBuffer = await newImg.toBuffer();
 
-    let newFileUuid = uuid.v1(),
-      newUrl = `temp/newPng/${newFileUuid}.png`;
+    // let newFileUuid = uuid.v1(),
+    //   newUrl = `temp/newPng/${newFileUuid}.png`;
 
     // 上传文件
-    await client.put(newUrl, newImgBuffer);
+    // await client.put(newUrl, newImgBuffer);
 
     await tpicture.create({
       uuid: fileUuid,
@@ -163,12 +167,12 @@ export default {
       consumerUuid,
       consumerName: userName,
       time: moment().format('YYYY-MM-DD HH:mm:ss'),
-      originUrl: fileUrl,
-      newUrl,
+      originUrl: `${pictureUuid}.png`,
+      newUrl: `${newFileUuid}.png`,
       isViolate: pictureList.length ? 1 : 0,
     });
 
-    fs.unlinkSync(path.resolve(__dirname, `../../tests/${pictureUuid}.png`));
+    // fs.unlinkSync(path.resolve(__dirname, `../../tests/${pictureUuid}.png`));
 
     return msg;
 

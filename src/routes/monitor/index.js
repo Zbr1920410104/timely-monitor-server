@@ -98,13 +98,13 @@ router.get('/getMonitorList', async (ctx, next) => {
 router.get('/getPicture', async (ctx, next) => {
   try {
     let { uuid } = ctx.state.user;
-    let { isOpened, foreTime, laterTime } = ctx.state.param;
+    // let { isOpened, foreTime, laterTime } = ctx.state.param;
 
     const data = await service.getPicture({
-      isOpened,
+      // isOpened,
       uuid,
-      foreTime,
-      laterTime,
+      // foreTime,
+      // laterTime,
     });
 
     ctx.body = new Res({

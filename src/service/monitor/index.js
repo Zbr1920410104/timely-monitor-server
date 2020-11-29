@@ -256,27 +256,31 @@ export default {
   /**
    * 根据uuid查询图片
    */
-  getPicture: async ({ isOpened, uuid, foreTime, laterTime }) => {
-    if (isOpened === 'true') {
-      return await tpicture.findAll({
-        where: { monitorUuid: uuid },
-        attributes: ['uuid', 'time', 'newUrl', 'consumerName'],
-        order: [['time', 'DESC']],
-        limit: 10,
-        raw: true,
-      });
-    } else {
-      return await tpicture.findAll({
-        where: {
-          monitorUuid: uuid,
-          [and]: [{ time: { [gt]: foreTime } }, { time: { [lt]: laterTime } }],
-        },
-        attributes: ['uuid', 'time', 'newUrl', 'consumerName'],
-        order: [['time', 'DESC']],
-        limit: 10,
-        raw: true,
-      });
-    }
+  getPicture: async ({
+    // isOpened, 
+    uuid,
+    // foreTime, 
+    // laterTime 
+  }) => {
+    // if (isOpened === 'true') {
+    //   return await tpicture.findAll({
+    //     where: { monitorUuid: uuid },
+    //     attributes: ['uuid', 'time', 'newUrl', 'consumerName'],
+    //     order: [['time', 'DESC']],
+    //     limit: 10,
+    //     raw: true,
+    //   });
+    // } else {
+    return await tpicture.findAll({
+      where: {
+        monitorUuid: uuid,
+        // [and]: [{ time: { [gt]: foreTime } }, { time: { [lt]: laterTime } }],
+      },
+      attributes: ['uuid', 'time', 'newUrl', 'consumerName'],
+      order: [['time', 'DESC']],
+      limit: 10,
+      raw: true,
+    });
   },
 
   /**
